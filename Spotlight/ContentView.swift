@@ -6,12 +6,6 @@
 //
 
 import SwiftUI
-import Combine
-
-private typealias Strings = Constants.Strings
-private typealias Colors = Constants.Assets.Colors
-private typealias Icons = Constants.Assets.Icons
-private typealias Keys = Constants.Onboarding.Keys
 
 /// Example app content view to demonstrate the spotlight system.
 ///
@@ -38,13 +32,16 @@ struct ContentView: View {
     }
 }
 
-// MARK: - Helper Functions / Sub-Components
+// MARK: - Helper Functions
 extension ContentView {
     private func startSpotlight() {
         appModel.spotlight
             .send(Constants.Onboarding.homeSequence)
     }
-    
+}
+
+// MARK: - View Components
+extension ContentView {
     @ViewBuilder private func Border<S: InsettableShape>(
         _ InsettableShape: S
     ) -> some View {
@@ -101,35 +98,7 @@ extension ContentView {
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack(spacing: 16) {
                     ForEach(1 ..< 4) { value in
-                        VStack(alignment: .leading, spacing: .zero) {
-                            ZStack {
-                                Colors.secondaryBackground
-                                Icons.photo
-                            }
-                            VStack(alignment: .leading, spacing: 6) {
-                                Text(Strings.infoCategory)
-                                    .font(.caption.smallCaps())
-                                    .foregroundColor(Colors.secondaryText)
-                                Text(Strings.thisCardHeadingFormat(value))
-                                    .bold()
-                                Spacer()
-                                Text(Strings.seeMore)
-                                    .bold()
-                            }
-                            .spotlightElement(
-                                key: Keys.thisCardInfo(value),
-                                shape: .rectangle(cornerRadius: 12)
-                            )
-                            .padding(12)
-                            .font(.caption)
-                        }
-                        .frame(width: 150, height: 220)
-                        .clipShape(RoundedRectangle(cornerRadius: 12))
-                        .overlay(Border(RoundedRectangle(cornerRadius: 12)))
-                        .spotlightElement(
-                            key: Keys.thisCard(value),
-                            shape: .rectangle(cornerRadius: 12)
-                        )
+                        ThisSectionCard(value: value)
                     }
                 }
                 .spotlightElement(
@@ -150,29 +119,7 @@ extension ContentView {
             }
             LazyVStack(spacing: 16) {
                 ForEach(1 ..< 4) { value in
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack(spacing: 12) {
-                            ZStack {
-                                Colors.secondaryBackground
-                                Icons.photo
-                            }
-                            .clipShape(Circle())
-                            .frame(width: 40, height: 40)
-                            .spotlightElement(
-                                key: Keys.thatCardImage(value)
-                            )
-                            Text(Strings.thatCardHeadingFormat(value))
-                                .bold()
-                            Spacer()
-                        }
-                        Text(Strings.thatCardInfo)
-                    }
-                    .padding(12)
-                    .overlay(Border(RoundedRectangle(cornerRadius: 12)))
-                    .spotlightElement(
-                        key: Keys.thatCard(value),
-                        shape: .rectangle(cornerRadius: 12)
-                    )
+                    ThatSectionCard(value: value)
                 }
             }
             .spotlightElement(
@@ -182,6 +129,64 @@ extension ContentView {
         }
         .font(.caption)
         .padding(.horizontal, 25)
+    }
+    
+    @ViewBuilder private func ThisSectionCard(value: Int) -> some View {
+        VStack(alignment: .leading, spacing: .zero) {
+            ZStack {
+                Colors.secondaryBackground
+                Icons.photo
+            }
+            VStack(alignment: .leading, spacing: 6) {
+                Text(Strings.infoCategory)
+                    .font(.caption.smallCaps())
+                    .foregroundColor(Colors.secondaryText)
+                Text(String(format: Strings.thisCardHeadingFormat, value))
+                    .bold()
+                Spacer()
+                Text(Strings.seeMore)
+                    .bold()
+            }
+            .spotlightElement(
+                key: String(format: Keys.thisCardInfoFormat, value),
+                shape: .rectangle(cornerRadius: 12)
+            )
+            .padding(12)
+            .font(.caption)
+        }
+        .frame(width: 150, height: 220)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .overlay(Border(RoundedRectangle(cornerRadius: 12)))
+        .spotlightElement(
+            key: String(format: Keys.thisCardFormat, value),
+            shape: .rectangle(cornerRadius: 12)
+        )
+    }
+    
+    @ViewBuilder private func ThatSectionCard(value: Int) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 12) {
+                ZStack {
+                    Colors.secondaryBackground
+                    Icons.photo
+                }
+                .clipShape(Circle())
+                .frame(width: 40, height: 40)
+                .spotlightElement(
+                    key: String(format: Keys.thatCardImageFormat, value)
+                )
+                Text(String(format: Strings.thatCardHeadingFormat, value))
+                    .bold()
+                Spacer()
+            }
+            Text(Strings.thatCardInfo)
+        }
+        .padding(12)
+        .overlay(Border(RoundedRectangle(cornerRadius: 12)))
+        .spotlightElement(
+            key: String(format: Keys.thatCardFormat, value),
+            shape: .rectangle(cornerRadius: 12)
+        )
     }
 }
 

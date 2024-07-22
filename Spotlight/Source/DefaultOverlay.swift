@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-private typealias Colors = SpotlightConstants.Assets.Colors
-private typealias Strings = SpotlightConstants.Strings
+private typealias SpotlightColors = SpotlightConstants.Assets.Colors
+private typealias SpotlightStrings = SpotlightConstants.Strings
 
 /// The default overlay demonstrating how one might focus elements
 /// and present messages during a spotlight sequence.
@@ -95,7 +95,7 @@ extension DefaultOverlay {
         cornerRadius: CGFloat
     ) -> some View {
         ZStack {
-            Colors.dimColor
+            SpotlightColors.dimColor
                 .edgesIgnoringSafeArea(.all)
             RoundedRectangle(cornerRadius: cornerRadius)
                 .blendMode(.destinationOut)
@@ -115,15 +115,15 @@ extension DefaultOverlay {
                 Spacer()
                 if cancellable {
                     Button(action: focusNone) {
-                        Text(Strings.dismiss)
+                        Text(SpotlightStrings.dismiss)
                             .padding(12)
                     }
                 }
                 Button(action: focusNext) {
-                    Text(Strings.next)
+                    Text(SpotlightStrings.next)
                         .padding(12)
-                        .foregroundColor(Colors.highlight)
-                        .background(Colors.primaryBackground)
+                        .foregroundColor(SpotlightColors.highlight)
+                        .background(SpotlightColors.primaryBackground)
                         .clipShape(
                             RoundedRectangle(cornerRadius: 12)
                         )
@@ -132,8 +132,8 @@ extension DefaultOverlay {
         }
         .padding(12)
         .font(.footnote.bold())
-        .foregroundColor(Colors.primaryBackground)
-        .background(Colors.highlight)
+        .foregroundColor(SpotlightColors.primaryBackground)
+        .background(SpotlightColors.highlight)
         .padding(.trailing, 30)
         .drawingGroup()
     }
